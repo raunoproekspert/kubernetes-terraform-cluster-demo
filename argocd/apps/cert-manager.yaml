@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Install before Traefik so CRDs are available for IngressRoute TLS
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: infrastructure
+
+  sources:
+    - repoURL: https://charts.jetstack.io
+      chart: cert-manager
+      targetRevision: "v1.15.1"
+      helm:
+        valueFiles:
+          - $values/helm/cert-manager/values.yaml
+    - repoURL: YOUR_REPO_URL
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

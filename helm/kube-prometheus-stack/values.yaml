@@ -1,0 +1,57 @@
+# kube-prometheus-stack values for local kind cluster
+
+# Grafana
+grafana:
+  enabled: true
+  adminPassword: "admin"  # Change for any non-local deployment
+  service:
+    type: ClusterIP
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "512Mi"
+
+# Prometheus
+prometheus:
+  prometheusSpec:
+    # Retain 1 day of data locally to keep disk usage low
+    retention: 1d
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "1Gi"
+    # Discover all ServiceMonitors/PodMonitors regardless of label
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+# Alertmanager — keep minimal locally
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: "20m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "128Mi"
+
+# Disable components that require persistent volumes by default
+prometheus-node-exporter:
+  hostRootFsMount:
+    enabled: false
+
+# Reduce replica count for local
+prometheusOperator:
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"

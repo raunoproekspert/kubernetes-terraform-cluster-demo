@@ -1,0 +1,35 @@
+# external-secrets values for local kind cluster
+
+# Install CRDs as part of the Helm release
+installCRDs: true
+
+# Minimal resource footprint for local
+resources:
+  requests:
+    cpu: "10m"
+    memory: "32Mi"
+  limits:
+    cpu: "100m"
+    memory: "128Mi"
+
+webhook:
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "32Mi"
+    limits:
+      cpu: "50m"
+      memory: "64Mi"
+
+certController:
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "32Mi"
+    limits:
+      cpu: "50m"
+      memory: "64Mi"
+
+# No SecretStore backend is wired for local.
+# When ready, add a ClusterSecretStore manifest in a PostSync hook or a
+# separate ArgoCD Application referencing your provider (Vault, AWS SSM, etc.)

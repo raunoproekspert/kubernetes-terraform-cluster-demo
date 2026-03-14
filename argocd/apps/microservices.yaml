@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: microservices
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Deploy after infrastructure is ready
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: microservices
+
+  # Umbrella Helm chart from this repo
+  sources:
+    - repoURL: YOUR_REPO_URL
+      targetRevision: main
+      path: helm/microservices
+      helm:
+        valueFiles:
+          - values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: microservices
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,39 @@
+# Traefik values for local kind cluster
+# kind does not provide a cloud LoadBalancer, so we use NodePort mapped to the host
+
+service:
+  type: NodePort
+  nodePorts:
+    web: 30080
+    websecure: 30443
+
+ports:
+  web:
+    nodePort: 30080
+  websecure:
+    nodePort: 30443
+
+# Enable the dashboard (accessible via port-forward in local mode)
+ingressRoute:
+  dashboard:
+    enabled: true
+
+# Access logs help with local debugging
+logs:
+  access:
+    enabled: true
+
+# Minimal resource requests for a local cluster
+resources:
+  requests:
+    cpu: "50m"
+    memory: "64Mi"
+  limits:
+    cpu: "200m"
+    memory: "256Mi"
+
+# Allow deploying to the control-plane node in kind
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule

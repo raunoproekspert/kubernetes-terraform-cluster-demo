@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Deploy ingress controller before other apps
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: infrastructure
+
+  # Multi-source: Helm chart from upstream, values from this repo
+  sources:
+    - repoURL: https://helm.traefik.io/traefik
+      chart: traefik
+      targetRevision: "27.0.2"
+      helm:
+        valueFiles:
+          - $values/helm/traefik/values.yaml
+    - repoURL: YOUR_REPO_URL
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

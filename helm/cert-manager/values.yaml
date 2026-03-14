@@ -1,0 +1,32 @@
+# cert-manager values for local kind cluster
+
+# Install CRDs as part of the Helm release
+crds:
+  enabled: true
+
+# Minimal resource footprint for local
+resources:
+  requests:
+    cpu: "10m"
+    memory: "32Mi"
+  limits:
+    cpu: "100m"
+    memory: "128Mi"
+
+webhook:
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "64Mi"
+
+cainjector:
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "32Mi"
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
