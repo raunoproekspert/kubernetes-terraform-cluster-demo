@@ -132,12 +132,69 @@ terraform destroy
 
 This deletes the kind cluster and all resources inside it.
 
-## Day-2: Adding a Microservice
+## Microservices
 
-1. Add a Helm chart dependency to `helm/microservices/Chart.yaml`
-2. Add its values under a matching key in `helm/microservices/values.yaml`
-3. Run `helm dependency update helm/microservices`
-4. Commit and push — ArgoCD will automatically sync
+### One-time secrets setup
+
+These two secrets contain credentials and are never committed to git. Run them once after each cluster bootstrap (`terraform apply`).
+
+**1. Image pull secret** — lets Kubernetes pull images from your private ghcr.io registry:
+
+```bash
+kubectl create secret docker-registry ghcr-pull-secret \
+  --namespace microservices \
+  --docker-server=ghcr.io \
+  --docker-username=raunoproekspert \
+  --docker-password=<YOUR_GITHUB_PAT> \
+  --docker-email=<your@email.com>
+```
+
+**2. ArgoCD Image Updater registry secret** — lets Image Updater poll ghcr.io for new tags and commit updated tags back to git:
+
+```bash
+kubectl create secret generic argocd-image-updater-secret \
+  --namespace argocd \
+  --from-literal=credentials='raunoproekspert:<YOUR_GITHUB_PAT>'
+```
+
+**Required PAT scopes** (GitHub → Settings → Developer settings → Personal access tokens → Tokens classic):
+- `read:packages` — read image tags from ghcr.io
+- `repo` — write updated image tags back to this GitOps repo
+
+The same PAT can be used for both secrets.
+
+### How image updates flow
+
+```
+New image pushed to ghcr.io by GitHub Actions
+         ↓
+ArgoCD Image Updater polls ghcr.io every 2 min
+         ↓
+New tag detected → commits updated image.tag to values.yaml in git
+         ↓
+ArgoCD detects git change → marks app as OutOfSync
+         ↓
+You review the diff in ArgoCD UI → click Sync to deploy
+```
+
+### Local DNS
+
+Add these entries to `/etc/hosts` so the Traefik ingress routes resolve locally:
+
+```
+127.0.0.1  invoice-service.local
+127.0.0.1  stock-service.local
+```
+
+Then access via Traefik's NodePort:
+- `http://invoice-service.local:30080`
+- `http://stock-service.local:30080`
+
+### Adding a new microservice
+
+1. Create a new chart under `helm/<service-name>/` (copy invoice-service as a template)
+2. Add an ArgoCD Application at `argocd/apps/<service-name>.yaml` pointing to the chart path
+3. Commit and push — ArgoCD syncs automatically
 
 ## Day-2: Switching to a Real Cloud Provider
 

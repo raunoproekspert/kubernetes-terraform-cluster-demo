@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: invoice-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    # ArgoCD Image Updater — polls ghcr.io and commits new tag to git.
+    # Sync is MANUAL: ArgoCD will show OutOfSync; click Sync in UI to deploy.
+    argocd-image-updater.argoproj.io/image-list: app=ghcr.io/raunoproekspert/invoice-service
+    argocd-image-updater.argoproj.io/app.update-strategy: latest
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/app.helm.image-name: image.repository
+    argocd-image-updater.argoproj.io/app.helm.image-tag: image.tag
+spec:
+  project: microservices
+
+  source:
+    repoURL: https://github.com/raunoproekspert/kubernetes-terraform-cluster-demo.git
+    targetRevision: main
+    path: helm/invoice-service
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: microservices
+
+  # No automated sync — Image Updater commits the new tag to git,
+  # ArgoCD marks the app OutOfSync, and you manually approve the deploy.
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

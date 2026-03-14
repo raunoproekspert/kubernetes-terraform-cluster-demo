@@ -1,0 +1,32 @@
+# ArgoCD Image Updater values
+# Polls ghcr.io for new image tags and commits updated tags back to git.
+# Automatic sync is disabled on microservice apps — ArgoCD will show
+# "OutOfSync" and wait for a manual Sync click in the UI.
+
+# Use the existing ArgoCD repository credentials for git write-back.
+# A separate registry secret (argocd-image-updater-secret) must be created
+# manually in the argocd namespace — see README for the kubectl command.
+config:
+  registries:
+    - name: GitHub Container Registry
+      prefix: ghcr.io
+      api_url: https://ghcr.io
+      credentials: secret:argocd/argocd-image-updater-secret#credentials
+      insecure: false
+
+# Poll interval — check for new images every 2 minutes
+updateInterval: 2m
+
+# Use ArgoCD API server to update Application annotations
+argocd:
+  serverAddr: argocd-server.argocd.svc.cluster.local
+  insecure: true
+  plaintext: true
+
+resources:
+  requests:
+    cpu: "10m"
+    memory: "32Mi"
+  limits:
+    cpu: "100m"
+    memory: "128Mi"
