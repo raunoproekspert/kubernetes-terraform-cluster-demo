@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/raunoproekspert/micro-services-demo/stock-service
-  tag: "sha-61369088f6111deaf5ed272f38195c386be5d376"
+  tag: "sha-6136908"
   pullPolicy: Always
 
 imagePullSecret: ghcr-pull-secret
