@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/raunoproekspert/micro-services-demo/invoice-service
-  tag: "sha-0759510"
+  tag: "sha-0759510@sha256:4ac64c39c76acab8348b1a86a9336eff1df55561b3a5370eb344050fb719fcfd"
   pullPolicy: Always
 
 imagePullSecret: ghcr-pull-secret
