@@ -61,8 +61,8 @@ resource "kubectl_manifest" "argocd_project_microservices" {
 # ---------------------------------------------------------------------------
 
 resource "kubectl_manifest" "argocd_root_app" {
-  yaml_body = templatefile("${path.module}/../argocd/apps/root-app.yaml", {
-    repo_url     = var.gitops_repo_url
+  yaml_body = templatefile("${path.module}/../argocd/root-app.yaml", {
+    repo_url      = var.gitops_repo_url
     repo_revision = var.gitops_repo_revision
   })
 

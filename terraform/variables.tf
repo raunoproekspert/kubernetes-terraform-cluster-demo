@@ -25,7 +25,7 @@ variable "argocd_chart_version" {
 variable "gitops_repo_url" {
   description = "URL of this git repository (used by ArgoCD Applications)"
   type        = string
-  default     = "https://github.com/your-org/kubernetes-terraform-cluster-demo"
+  default     = "https://github.com/raunoproekspert/kubernetes-terraform-cluster-demo.git"
 }
 
 variable "gitops_repo_revision" {

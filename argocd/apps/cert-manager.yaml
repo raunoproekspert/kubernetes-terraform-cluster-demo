@@ -18,7 +18,7 @@ spec:
       helm:
         valueFiles:
           - $values/helm/cert-manager/values.yaml
-    - repoURL: YOUR_REPO_URL
+    - repoURL: https://github.com/raunoproekspert/kubernetes-terraform-cluster-demo.git
       targetRevision: main
       ref: values
 

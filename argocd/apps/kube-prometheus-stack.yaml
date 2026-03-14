@@ -17,7 +17,7 @@ spec:
       helm:
         valueFiles:
           - $values/helm/kube-prometheus-stack/values.yaml
-    - repoURL: YOUR_REPO_URL
+    - repoURL: https://github.com/raunoproekspert/kubernetes-terraform-cluster-demo.git
       targetRevision: main
       ref: values
 
