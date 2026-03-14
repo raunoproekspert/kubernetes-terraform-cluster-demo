@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/raunoproekspert/invoice-service
-  tag: "latest"
+  tag: "sha-0759510"
   pullPolicy: Always
 
 imagePullSecret: ghcr-pull-secret
