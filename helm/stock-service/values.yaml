@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/raunoproekspert/stock-service
-  tag: "latest"
+  tag: "sha-6136908"
   pullPolicy: Always
 
 imagePullSecret: ghcr-pull-secret
