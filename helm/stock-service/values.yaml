@@ -25,14 +25,14 @@ resources:
 
 livenessProbe:
   httpGet:
-    path: /health
+    path: /actuator/health
     port: 8082
   initialDelaySeconds: 15
   periodSeconds: 20
 
 readinessProbe:
   httpGet:
-    path: /health
+    path: /actuator/ready
     port: 8082
   initialDelaySeconds: 5
   periodSeconds: 10
